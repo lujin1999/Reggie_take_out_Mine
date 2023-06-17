@@ -79,34 +79,6 @@ public class CategoryController {
         return R.success("更新成功");
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-//
-//    /**
-//     * 根据id修改分类信息
-//     * @param category
-//     * @return
-//     */
-//    @PutMapping
-//    public R<String> update(@RequestBody Category category){
-//        log.info("修改分类信息：{}",category);
-//
-//        categoryService.updateById(category);
-//
-//        return R.success("修改分类信息成功");
-//    }
-//
     /**
      * 根据条件查询分类数据
      * @param category
