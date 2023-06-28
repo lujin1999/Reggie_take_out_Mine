@@ -112,12 +112,13 @@ public class UserController {
          SendEmailUtils.sendAuthCodeEmail(phone,code);
 
          //将验证码保存到session
-         session.setAttribute("code", code);
+//         session.setAttribute("code", code);
 
 //        //将验证码缓存到Redis(有效时间为1分钟)
 //        stringRedisTemplate.opsForValue().set("code",code,1, TimeUnit.MINUTES);
         //将手机号保存到session
-        session.setAttribute("phone",phone);
+//        session.setAttribute("phone",phone);
+        session.setAttribute(phone,code);
         return R.success("验证码发送成功！");
     }
 
