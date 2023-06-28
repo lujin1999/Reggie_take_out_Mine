@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.itheima.reggie.common.R;
 import com.itheima.reggie.entity.User;
 import com.itheima.reggie.service.UserService;
+import com.itheima.reggie.utils.SendEmailUtils;
 import com.itheima.reggie.utils.ValidateCodeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -29,27 +30,27 @@ public class UserController {
      * @param user
      * @return
      */
-    @PostMapping("/sendMsg")
-    public R<String> sendMsg(@RequestBody User user, HttpSession session){
-        //获取手机号
-        String phone = user.getPhone();
-
-        if(StringUtils.isNotEmpty(phone)){
-            //生成随机的4位验证码
-            String code = ValidateCodeUtils.generateValidateCode(4).toString();
-            log.info("code={}",code);
-
-            //调用阿里云提供的短信服务API完成发送短信
-            //SMSUtils.sendMessage("瑞吉外卖","",phone,code);
-
-            //需要将生成的验证码保存到Session
-            session.setAttribute(phone,code);
-
-            return R.success("手机验证码短信发送成功");
-        }
-
-        return R.error("短信发送失败");
-    }
+//    @PostMapping("/sendMsg")
+//    public R<String> sendMsg(@RequestBody User user, HttpSession session){
+//        //获取手机号
+//        String phone = user.getPhone();
+//
+//        if(StringUtils.isNotEmpty(phone)){
+//            //生成随机的4位验证码
+//            String code = ValidateCodeUtils.generateValidateCode(4).toString();
+//            log.info("code={}",code);
+//
+//            //调用阿里云提供的短信服务API完成发送短信
+//            //SMSUtils.sendMessage("瑞吉外卖","",phone,code);
+//
+//            //需要将生成的验证码保存到Session
+//            session.setAttribute(phone,code);
+//
+//            return R.success("手机验证码短信发送成功");
+//        }
+//
+//        return R.error("短信发送失败");
+//    }
 
     /**
      * 移动端用户登录
@@ -90,5 +91,35 @@ public class UserController {
         }
         return R.error("登录失败");
     }
+
+    /**
+     * 发送验证码
+     *
+     * @param user
+     * @return
+     */
+    @PostMapping("/sendMsg")
+    public R<String> sendMsg(@RequestBody User user, HttpSession session) {
+        // 获取邮箱号
+        String phone = user.getPhone();
+        if (phone == null) {
+            return R.error("邮箱号为空！");
+        }
+        // 随机生成4位验证码
+        String code = String.valueOf(ValidateCodeUtils.generateValidateCode(4));
+        log.info("验证码为：{}", code);
+        //发送验证码到邮箱
+         SendEmailUtils.sendAuthCodeEmail(phone,code);
+
+         //将验证码保存到session
+         session.setAttribute("code", code);
+
+//        //将验证码缓存到Redis(有效时间为1分钟)
+//        stringRedisTemplate.opsForValue().set("code",code,1, TimeUnit.MINUTES);
+        //将手机号保存到session
+        session.setAttribute("phone",phone);
+        return R.success("验证码发送成功！");
+    }
+
 
 }
