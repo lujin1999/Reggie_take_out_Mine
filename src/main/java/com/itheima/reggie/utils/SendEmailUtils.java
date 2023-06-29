@@ -22,7 +22,7 @@ public class SendEmailUtils {
             /*IMAP/SMTP服务的密码 username为你开启发送验证码功能的邮箱号 password为你在qq邮箱获取到的一串字符串*/
             mail.setAuthentication("1433578936@qq.com", "athimicguusqhafd");
             /*发送邮件的邮箱和发件人*/
-            mail.setFrom("1433578936@qq.com", "jinlu");
+            mail.setFrom("1433578936@qq.com", "外卖点餐系统");
             /*使用安全链接*/
             mail.setSSLOnConnect(true);
             /*接收的邮箱*/
